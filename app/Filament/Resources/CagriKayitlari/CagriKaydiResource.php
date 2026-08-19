@@ -65,6 +65,11 @@ class CagriKaydiResource extends Resource
                     ->seconds(false)
                     ->displayFormat('d.m.Y H:i')
                     ->default(now()),
+                DateTimePicker::make('arama_bitis_saat')
+                    ->label('Arama bitiş saati')
+                    ->native(false)
+                    ->seconds(false)
+                    ->displayFormat('d.m.Y H:i'),
                 TextInput::make('gorusulen_kisi')
                     ->label('Karşıda görüşülen kişi')
                     ->required()
@@ -95,6 +100,10 @@ class CagriKaydiResource extends Resource
                     ->sortable(),
                 TextColumn::make('aranan_saat')
                     ->label('Aranan saat')
+                    ->dateTime('d.m.Y H:i')
+                    ->sortable(),
+                TextColumn::make('arama_bitis_saat')
+                    ->label('Arama bitiş saati')
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
                 TextColumn::make('gorusulen_kisi')

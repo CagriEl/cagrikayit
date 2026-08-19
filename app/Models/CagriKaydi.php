@@ -13,6 +13,7 @@ class CagriKaydi extends Model
     protected $fillable = [
         'arayan_kisi_id',
         'aranan_saat',
+        'arama_bitis_saat',
         'gorusulen_kisi',
         'konu',
         'jira_talep_kodu',
@@ -23,6 +24,7 @@ class CagriKaydi extends Model
     {
         return [
             'aranan_saat' => 'datetime',
+            'arama_bitis_saat' => 'datetime',
             'cozum_durumu' => CozumDurumu::class,
         ];
     }
