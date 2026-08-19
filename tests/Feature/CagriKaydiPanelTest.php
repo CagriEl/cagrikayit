@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\CozumDurumu;
 use App\Enums\Rol;
 use App\Filament\Resources\CagriKayitlari\CagriKaydiResource;
+use App\Filament\Resources\CagriKayitlari\Pages\ViewCagriKaydi;
 use App\Filament\Widgets\AylikCagriGrafigi;
 use App\Models\CagriKaydi;
 use App\Models\User;
@@ -124,5 +125,27 @@ class CagriKaydiPanelTest extends TestCase
 
         $this->assertTrue(CagriKaydiResource::canCreate());
         $this->assertTrue(CagriKaydiResource::canEdit($kayit));
+    }
+
+    public function test_vice_president_is_redirected_from_edit_to_view(): void
+    {
+        $kayit = CagriKaydi::query()->create([
+            'arayan_kisi_id' => User::factory()->create()->id,
+            'aranan_saat' => now(),
+            'gorusulen_kisi' => 'Test Kişi',
+            'konu' => 'Test konu detayı',
+            'cozum_durumu' => CozumDurumu::Beklemede,
+        ]);
+
+        $baskanYardimcisi = User::factory()->baskanYardimcisi()->create();
+
+        $this->actingAs($baskanYardimcisi)
+            ->get("/personel/cagri-kayitlari/{$kayit->id}/edit")
+            ->assertRedirect("/personel/cagri-kayitlari/{$kayit->id}");
+
+        Livewire::actingAs($baskanYardimcisi)
+            ->test(ViewCagriKaydi::class, ['record' => $kayit->getRouteKey()])
+            ->assertSuccessful()
+            ->assertSet('data.konu', 'Test konu detayı');
     }
 }

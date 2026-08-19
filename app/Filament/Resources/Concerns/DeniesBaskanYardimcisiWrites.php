@@ -30,4 +30,9 @@ trait DeniesBaskanYardimcisiWrites
     {
         return static::canModifyRecords();
     }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->check();
+    }
 }

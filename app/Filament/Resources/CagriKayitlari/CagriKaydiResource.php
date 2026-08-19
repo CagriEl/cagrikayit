@@ -6,6 +6,7 @@ use App\Enums\CozumDurumu;
 use App\Filament\Resources\CagriKayitlari\Pages\CreateCagriKaydi;
 use App\Filament\Resources\CagriKayitlari\Pages\EditCagriKaydi;
 use App\Filament\Resources\CagriKayitlari\Pages\ListCagriKayitlari;
+use App\Filament\Resources\CagriKayitlari\Pages\ViewCagriKaydi;
 use App\Filament\Resources\Concerns\AuthorizesAdminOnlyDeletes;
 use App\Filament\Resources\Concerns\DeniesBaskanYardimcisiWrites;
 use App\Models\CagriKaydi;
@@ -13,6 +14,7 @@ use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -127,7 +129,11 @@ class CagriKaydiResource extends Resource
                     ->preload(),
             ])
             ->recordActions([
-                EditAction::make(),
+                ViewAction::make()
+                    ->label('Görüntüle')
+                    ->visible(fn (CagriKaydi $record): bool => ! static::canEdit($record)),
+                EditAction::make()
+                    ->visible(fn (CagriKaydi $record): bool => static::canEdit($record)),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -146,6 +152,7 @@ class CagriKaydiResource extends Resource
         return [
             'index' => ListCagriKayitlari::route('/'),
             'create' => CreateCagriKaydi::route('/create'),
+            'view' => ViewCagriKaydi::route('/{record}'),
             'edit' => EditCagriKaydi::route('/{record}/edit'),
         ];
     }
