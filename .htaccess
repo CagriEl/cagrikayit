@@ -1,0 +1,27 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Hassas dosyaları kapat
+    RewriteRule ^\.env - [F,L]
+    RewriteRule ^\.git - [F,L]
+    RewriteRule ^composer\.(json|lock)$ - [F,L]
+    RewriteRule ^(artisan|vendor|storage|bootstrap|tests|database)/ - [F,L]
+
+    # /public/admin/login -> /admin/login
+    RewriteCond %{THE_REQUEST} \s/+public/ [NC]
+    RewriteRule ^public/(.*)$ /$1 [R=301,L]
+
+    # Tüm istekleri Laravel public klasörüne gönder
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<FilesMatch "^\.env">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

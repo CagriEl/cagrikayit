@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\AdminLogin;
 use App\Filament\Resources\CagriKayitlari\CagriKaydiResource;
 use App\Filament\Resources\Users\UserResource;
 use App\Filament\Widgets\AylikCagriGrafigi;
@@ -29,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(AdminLogin::class)
             ->profile()
             ->brandName('Çağrı Kayıt Yönetim')
             ->colors([
