@@ -6,6 +6,7 @@ use App\Enums\CozumDurumu;
 use App\Filament\Resources\CagriKayitlari\Pages\CreateCagriKaydi;
 use App\Filament\Resources\CagriKayitlari\Pages\EditCagriKaydi;
 use App\Filament\Resources\CagriKayitlari\Pages\ListCagriKayitlari;
+use App\Filament\Resources\Concerns\AuthorizesAdminOnlyDeletes;
 use App\Models\CagriKaydi;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -25,6 +26,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class CagriKaydiResource extends Resource
 {
+    use AuthorizesAdminOnlyDeletes;
+
     protected static ?string $model = CagriKaydi::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhone;

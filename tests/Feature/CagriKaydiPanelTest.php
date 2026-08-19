@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Enums\CozumDurumu;
 use App\Enums\Rol;
+use App\Filament\Resources\CagriKayitlari\CagriKaydiResource;
 use App\Filament\Widgets\AylikCagriGrafigi;
+use App\Models\CagriKaydi;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -74,5 +77,26 @@ class CagriKaydiPanelTest extends TestCase
         $this->actingAs($user);
 
         $this->assertFalse(AylikCagriGrafigi::canView());
+    }
+
+    public function test_only_admin_can_delete_call_records(): void
+    {
+        $kayit = CagriKaydi::query()->create([
+            'arayan_kisi_id' => User::factory()->create()->id,
+            'aranan_saat' => now(),
+            'gorusulen_kisi' => 'Test Kişi',
+            'konu' => 'Test konu',
+            'cozum_durumu' => CozumDurumu::Beklemede,
+        ]);
+
+        $personel = User::factory()->create(['is_admin' => false]);
+        $this->actingAs($personel);
+        $this->assertFalse(CagriKaydiResource::canDelete($kayit));
+        $this->assertFalse(CagriKaydiResource::canDeleteAny());
+
+        $admin = User::factory()->admin()->create();
+        $this->actingAs($admin);
+        $this->assertTrue(CagriKaydiResource::canDelete($kayit));
+        $this->assertTrue(CagriKaydiResource::canDeleteAny());
     }
 }
