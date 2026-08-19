@@ -99,4 +99,30 @@ class CagriKaydiPanelTest extends TestCase
         $this->assertTrue(CagriKaydiResource::canDelete($kayit));
         $this->assertTrue(CagriKaydiResource::canDeleteAny());
     }
+
+    public function test_vice_president_can_only_read_call_records(): void
+    {
+        $kayit = CagriKaydi::query()->create([
+            'arayan_kisi_id' => User::factory()->create()->id,
+            'aranan_saat' => now(),
+            'gorusulen_kisi' => 'Test Kişi',
+            'konu' => 'Test konu',
+            'cozum_durumu' => CozumDurumu::Beklemede,
+        ]);
+
+        $baskanYardimcisi = User::factory()->baskanYardimcisi()->create();
+        $this->actingAs($baskanYardimcisi);
+
+        $this->get('/personel/cagri-kayitlari')->assertOk();
+        $this->assertTrue(CagriKaydiResource::canViewAny());
+        $this->assertFalse(CagriKaydiResource::canCreate());
+        $this->assertFalse(CagriKaydiResource::canEdit($kayit));
+        $this->assertFalse(CagriKaydiResource::canDelete($kayit));
+
+        $personel = User::factory()->create(['rol' => Rol::Personel]);
+        $this->actingAs($personel);
+
+        $this->assertTrue(CagriKaydiResource::canCreate());
+        $this->assertTrue(CagriKaydiResource::canEdit($kayit));
+    }
 }

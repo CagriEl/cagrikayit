@@ -7,6 +7,7 @@ use App\Filament\Resources\CagriKayitlari\Pages\CreateCagriKaydi;
 use App\Filament\Resources\CagriKayitlari\Pages\EditCagriKaydi;
 use App\Filament\Resources\CagriKayitlari\Pages\ListCagriKayitlari;
 use App\Filament\Resources\Concerns\AuthorizesAdminOnlyDeletes;
+use App\Filament\Resources\Concerns\DeniesBaskanYardimcisiWrites;
 use App\Models\CagriKaydi;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
 class CagriKaydiResource extends Resource
 {
     use AuthorizesAdminOnlyDeletes;
+    use DeniesBaskanYardimcisiWrites;
 
     protected static ?string $model = CagriKaydi::class;
 
