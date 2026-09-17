@@ -28,11 +28,34 @@ trait DeniesBaskanYardimcisiWrites
 
     public static function canEdit(Model $record): bool
     {
-        return static::canModifyRecords();
+        if (! static::canModifyRecords()) {
+            return false;
+        }
+
+        return static::canAccessRecord($record);
     }
 
     public static function canView(Model $record): bool
     {
-        return auth()->check();
+        if (! auth()->check()) {
+            return false;
+        }
+
+        return static::canAccessRecord($record);
+    }
+
+    protected static function canAccessRecord(Model $record): bool
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        if ($user->canViewAllCagriKayitlari()) {
+            return true;
+        }
+
+        return (int) $record->getAttribute('arayan_kisi_id') === (int) $user->id;
     }
 }

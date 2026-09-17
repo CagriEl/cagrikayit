@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Çağrı Kayıt</title>
+    <title>Belsis Görüşme Kayıt Sistemi</title>
     <style>
         body {
             margin: 0;
@@ -41,12 +41,12 @@
 </head>
 <body>
     <div class="wrap">
-        <h1>Çağrı Kayıt</h1>
+        <h1>Belsis Görüşme Kayıt Sistemi</h1>
         <p>Giriş yapmak istediğiniz paneli seçin.</p>
         <div class="cards">
             <a href="{{ url('/personel/login') }}">
                 <strong>Personel paneli</strong>
-                <span>Çağrı kaydı oluşturmak için giriş yapın.</span>
+                <span>Görüşme kaydı oluşturmak için giriş yapın.</span>
             </a>
             <a href="{{ url('/admin/login') }}">
                 <strong>Yönetim paneli</strong>

@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login(AdminLogin::class)
             ->profile()
-            ->brandName('Çağrı Kayıt Yönetim')
+            ->brandName('Belsis Görüşme Kayıt Sistemi')
             ->colors([
                 'primary' => Color::Indigo,
             ])

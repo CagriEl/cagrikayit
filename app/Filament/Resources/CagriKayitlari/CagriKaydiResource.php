@@ -135,7 +135,8 @@ class CagriKaydiResource extends Resource
                     ->label('Arayan kişi')
                     ->relationship('arayanKisi', 'name')
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->visible(fn (): bool => auth()->user()?->canViewAllCagriKayitlari() ?? false),
             ])
             ->recordActions([
                 ViewAction::make()
@@ -153,7 +154,15 @@ class CagriKaydiResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['arayanKisi']);
+        $query = parent::getEloquentQuery()->with(['arayanKisi']);
+
+        $user = auth()->user();
+
+        if ($user && ! $user->canViewAllCagriKayitlari()) {
+            $query->where('arayan_kisi_id', $user->id);
+        }
+
+        return $query;
     }
 
     public static function getPages(): array

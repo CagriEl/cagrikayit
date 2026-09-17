@@ -67,6 +67,13 @@ class User extends Authenticatable implements FilamentUser
         return $this->is_admin;
     }
 
+    public function canViewAllCagriKayitlari(): bool
+    {
+        return $this->isAdmin()
+            || $this->rol === Rol::BaskanYardimcisi
+            || $this->rol === Rol::Baskan;
+    }
+
     public function cagriKayitlari(): HasMany
     {
         return $this->hasMany(CagriKaydi::class, 'arayan_kisi_id');

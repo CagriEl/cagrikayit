@@ -31,7 +31,7 @@ class PersonelPanelProvider extends PanelProvider
             ->path('personel')
             ->login()
             ->profile()
-            ->brandName('Çağrı Kayıt')
+            ->brandName('Belsis Görüşme Kayıt Sistemi')
             ->colors([
                 'primary' => Color::Teal,
             ])

@@ -124,7 +124,47 @@ class CagriKaydiPanelTest extends TestCase
         $this->actingAs($personel);
 
         $this->assertTrue(CagriKaydiResource::canCreate());
-        $this->assertTrue(CagriKaydiResource::canEdit($kayit));
+        $this->assertFalse(CagriKaydiResource::canEdit($kayit));
+    }
+
+    public function test_personel_only_sees_own_call_records(): void
+    {
+        $personel = User::factory()->create(['rol' => Rol::Personel]);
+        $digerPersonel = User::factory()->create(['rol' => Rol::Personel]);
+
+        $kendiKayit = CagriKaydi::query()->create([
+            'arayan_kisi_id' => $personel->id,
+            'aranan_saat' => now(),
+            'gorusulen_kisi' => 'Kendi görüşülen',
+            'konu' => 'Kendi kayıt konusu',
+            'cozum_durumu' => CozumDurumu::Beklemede,
+        ]);
+
+        $baskaKayit = CagriKaydi::query()->create([
+            'arayan_kisi_id' => $digerPersonel->id,
+            'aranan_saat' => now(),
+            'gorusulen_kisi' => 'Başka görüşülen',
+            'konu' => 'Başka kayıt konusu',
+            'cozum_durumu' => CozumDurumu::Beklemede,
+        ]);
+
+        $this->actingAs($personel);
+
+        $gorunenIdler = CagriKaydiResource::getEloquentQuery()->pluck('id')->all();
+
+        $this->assertContains($kendiKayit->id, $gorunenIdler);
+        $this->assertNotContains($baskaKayit->id, $gorunenIdler);
+        $this->assertTrue(CagriKaydiResource::canView($kendiKayit));
+        $this->assertFalse(CagriKaydiResource::canView($baskaKayit));
+        $this->assertTrue(CagriKaydiResource::canEdit($kendiKayit));
+        $this->assertFalse(CagriKaydiResource::canEdit($baskaKayit));
+
+        $baskanYardimcisi = User::factory()->baskanYardimcisi()->create();
+        $this->actingAs($baskanYardimcisi);
+
+        $tumIdler = CagriKaydiResource::getEloquentQuery()->pluck('id')->all();
+        $this->assertContains($kendiKayit->id, $tumIdler);
+        $this->assertContains($baskaKayit->id, $tumIdler);
     }
 
     public function test_vice_president_is_redirected_from_edit_to_view(): void
